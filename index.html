@@ -2,37 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Naeem - Portfolio</title>
+  <title>Naeem - Terminal Portfolio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
   <style>
     /* --- CORE RESET & THEME --- */
+    :root {
+      --primary: #22d3ee; /* Cyan */
+      --bg: #050814;
+      --terminal-bg: #0f172a;
+      --text: #e5e7eb;
+      --text-dim: #9ca3af;
+    }
+
     body {
       margin: 0;
-      font-family: "Courier New", Courier, monospace; /* Tech font */
-      background: #050814;
-      color: #e5e7eb;
-      overflow: hidden; /* Prevent scrolling while overlay is active */
+      font-family: "Courier New", Courier, monospace;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    #particles-js {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: radial-gradient(circle at top, #111827 0, #020617 60%);
-    }
-
-    /* --- OVERLAY (Guns.lol style) --- */
+    /* --- OVERLAY --- */
     #overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         background-color: #000;
         z-index: 9999;
         display: flex;
@@ -51,178 +48,151 @@
         text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
     }
 
-    @keyframes pulse {
-        0% { opacity: 0.3; }
-        50% { opacity: 1; }
-        100% { opacity: 0.3; }
-    }
+    @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-    /* --- MAIN CONTENT LAYOUT --- */
+    /* --- LAYOUT --- */
     .page {
       max-width: 1000px;
       margin: 0 auto;
       padding: 3rem 1.5rem 4rem;
-      opacity: 0; /* Hidden initially */
+      opacity: 0; 
       filter: blur(15px);
       transition: all 1.5s ease-out;
     }
 
-    /* --- HERO & TERMINAL --- */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+    #particles-js { position: fixed; inset: 0; z-index: -1; }
+
+    /* --- TERMINAL (INTERACTIVE) --- */
+    .terminal-container {
       margin-bottom: 4rem;
     }
-    .hero-title {
-      font-size: clamp(2.4rem, 5vw, 3.2rem);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #22d3ee;
-      text-shadow: 0 0 25px rgba(34,211,238,0.5);
-      margin-bottom: 10px;
-    }
-    .hero-subtitle {
-      font-size: 1.05rem;
-      max-width: 560px;
-      color: #9ca3af;
-      line-height: 1.6;
+
+    .terminal-window {
+      background: radial-gradient(circle at top left, #0f172a 0, #020617 55%);
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+      box-shadow: 0 0 40px rgba(15, 23, 42, 0.6);
+      overflow: hidden;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.9rem;
     }
 
-    .terminal {
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 55%);
-      border-radius: 1rem;
-      border: 1px solid #1f2937;
-      box-shadow: 0 0 0 1px rgba(15,23,42,.9), 0 18px 40px rgba(15,23,42,.9);
-      overflow: hidden;
-      margin-top: 2rem;
-      max-width: 600px;
-    }
     .terminal-header {
+      background: #0b1120;
+      padding: 8px 12px;
       display: flex;
       align-items: center;
-      gap: .5rem;
-      padding: .6rem .9rem;
-      background: linear-gradient(to right, #020617, #0b1120);
-      border-bottom: 1px solid #1f2937;
-      font-size: .75rem;
-      color: #6b7280;
+      gap: 6px;
+      border-bottom: 1px solid #1e293b;
     }
-    .dot { width: .6rem; height: .6rem; border-radius: 999px; background: #374151; }
-    .dot.red { background:#ef4444; box-shadow:0 0 8px rgba(239,68,68,.5); }
-    .dot.yellow { background:#eab308; box-shadow:0 0 8px rgba(234,179,8,.5); }
-    .dot.green { background:#22c55e; box-shadow:0 0 8px rgba(34,197,94,.5); }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .red { background: #ef4444; }
+    .yellow { background: #eab308; }
+    .green { background: #22c55e; }
+    .terminal-title { margin-left: 10px; color: #64748b; font-size: 0.8rem; }
 
     .terminal-body {
-      padding: 1.25rem 1rem 1.5rem;
-      font-family: "JetBrains Mono", Consolas, monospace;
-      font-size: .85rem;
-      line-height: 1.6;
+      padding: 15px;
+      height: 300px;
+      overflow-y: auto;
+      color: #cbd5e1;
     }
-    .prompt-line { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
-    .prompt-user { color:#22c55e; }
-    .prompt-path { color:#38bdf8; }
-    .typed { color: #e5e7eb; }
 
-    /* --- CARDS & GRID --- */
-    .section { margin-bottom: 4rem; }
+    /* Scrollbar for terminal */
+    .terminal-body::-webkit-scrollbar { width: 8px; }
+    .terminal-body::-webkit-scrollbar-track { background: #0f172a; }
+    .terminal-body::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+    .output-line { margin-bottom: 5px; word-wrap: break-word; }
+    .command-success { color: #22d3ee; }
+    .command-error { color: #ef4444; }
+    
+    .input-line { display: flex; align-items: center; }
+    .prompt { color: #22c55e; margin-right: 8px; white-space: nowrap; }
+    .path { color: #38bdf8; margin-right: 8px; }
+    
+    #term-input {
+      background: transparent;
+      border: none;
+      color: #e5e7eb;
+      font-family: inherit;
+      font-size: inherit;
+      flex-grow: 1;
+      outline: none;
+    }
+
+    /* --- CARDS & SECTIONS --- */
+    .section { margin-bottom: 5rem; }
     .section-title {
       font-size: 1.1rem;
       text-transform: uppercase;
-      letter-spacing: .18em;
-      color: #9ca3af;
-      margin-bottom: .5rem;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
       border-bottom: 1px solid #1f2937;
       padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
       display: inline-block;
     }
-    .section-title span { color: #22d3ee; margin-right: 5px; }
-    .section-desc { color: #6b7280; margin-bottom: 1.5rem; font-size: 0.9rem; }
-
-    .grid { display: grid; gap: 1.5rem; }
-    .grid-2 { grid-template-columns: 1fr; }
-    @media (min-width: 768px) {
-        .grid-2 { grid-template-columns: 1fr 1fr; }
-        .hero { flex-direction: row; justify-content: space-between; align-items: center; }
-    }
+    .accent { color: var(--primary); margin-right: 5px; }
+    
+    .grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
 
     .card {
-      border-radius: .9rem;
-      background: rgba(17, 24, 39, 0.6);
+      background: rgba(17, 24, 39, 0.7);
       border: 1px solid rgba(55, 65, 81, 0.5);
+      border-radius: 12px;
       padding: 1.5rem;
-      transition: transform 0.2s, border-color 0.2s;
+      transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
     }
     .card:hover {
-        border-color: #22d3ee;
-        transform: translateY(-2px);
-    }
-    
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #f3f4f6;
-      margin-bottom: 0.3rem;
-    }
-    .card-meta {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #6b7280;
-      margin-bottom: 1rem;
-    }
-    .card-body {
-      font-size: 0.9rem;
-      color: #9ca3af;
-      line-height: 1.6;
-      flex-grow: 1; /* Pushes buttons to bottom if needed */
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(34, 211, 238, 0.1);
     }
 
-    /* --- CUSTOM BUTTONS --- */
-    .card-btn {
-      display: inline-block;
-      margin-top: 1.2rem;
-      padding: 0.4rem 0.9rem;
-      border: 1px solid #22d3ee;
-      color: #22d3ee;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      border-radius: 4px;
-      transition: all 0.2s;
-      background: rgba(34, 211, 238, 0.05);
-    }
-    .card-btn:hover {
-      background: #22d3ee;
-      color: #000;
-      box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
-    }
+    .card-title { font-size: 1.1rem; font-weight: 700; color: #f3f4f6; margin-bottom: 0.2rem; }
+    .card-meta { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+    .card-desc { font-size: 0.9rem; color: #9ca3af; margin-bottom: 1rem; flex-grow: 1; }
 
-    /* --- TAGS / PILLS --- */
-    .pill-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
-    .pill {
-      font-size: .75rem;
-      padding: .25rem .75rem;
-      border-radius: 999px;
+    /* --- TAGS & BUTTONS --- */
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: auto; }
+    .tag {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(30, 41, 55, 0.5);
       border: 1px solid #374151;
       color: #d1d5db;
-      background: rgba(31, 41, 55, 0.5);
     }
 
-    /* --- LINKS --- */
-    .link-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
-    .link {
-      color: #38bdf8;
+    .btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 6px 12px;
+      border: 1px solid var(--primary);
+      color: var(--primary);
       text-decoration: none;
-      font-size: 0.95rem;
-      transition: color 0.2s;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      transition: 0.2s;
+      width: fit-content;
     }
-    .link:hover { color: #7dd3fc; text-decoration: underline; }
+    .btn:hover { background: var(--primary); color: #000; }
 
+    /* --- GITHUB SPECIFIC --- */
+    .repo-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 10px;
+    }
+    .stat-item { display: flex; align-items: center; gap: 4px; }
+    
   </style>
 </head>
 <body>
@@ -234,173 +204,205 @@
 </div>
 
 <div class="page" id="main-content">
-  
-  <section class="hero">
-    <div>
-      <div class="hero-title">NAEEM</div>
-      <p class="hero-subtitle">
-        Protocol initialized. Accessing secure nodes... <br>
-        Welcome to the portfolio.
-      </p>
+
+  <section class="terminal-container">
+    <div style="margin-bottom: 1rem;">
+      <h1 style="font-size: 2.5rem; margin: 0; color: var(--primary);">NAEEM</h1>
+      <p style="color: var(--text-dim);">Cyber Security & AI Developer</p>
     </div>
 
-    <div class="terminal">
-        <div class="terminal-header">
-          <span class="dot red"></span>
-          <span class="dot yellow"></span>
-          <span class="dot green"></span>
-          <span>root@naeem: ~</span>
-        </div>
-        <div class="terminal-body">
-          <div class="prompt-line">
-            <span class="prompt-user">root@naeem</span>
-            <span class="prompt-path">~</span>
-            <span class="prompt-path">$</span>
-            <span class="typed"></span>
-          </div>
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+        <div class="terminal-title">root@naeem: ~ (Interactive)</div>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <div class="output-line">Welcome to NaeemOS v1.0.0</div>
+        <div class="output-line">Type <span class="command-success">'help'</span> to see available commands.</div>
+        <br>
+        <div id="terminal-output"></div>
+        
+        <div class="input-line">
+          <span class="prompt">root@naeem</span>
+          <span class="path">~</span>
+          <span class="path">$</span>
+          <input type="text" id="term-input" autocomplete="off" spellcheck="false">
         </div>
       </div>
+    </div>
   </section>
 
   <section class="section">
-    <div class="section-title"><span>//</span> Capabilities</div>
-    <div class="section-desc">
-      These are the stuff i am highly experienced in
-    </div>
+    <div class="section-title"><span class="accent">//</span> Capabilities</div>
+    <p style="color: #6b7280; margin-bottom: 1.5rem;">I am highly experienced in the contents listed below, you can explore more by downloading my CV and viewing my business.</p>
     
-    <div class="grid grid-2">
+    <div class="grid">
       <div class="card">
         <div class="card-title">Programming & Web Dev</div>
         <div class="card-meta">AI • DATA SCIENCE</div>
-        <div class="card-body">
+        <div class="card-desc">
           I am a well experienced coding and AI dev, my short projects are all attached to the next page, my repo's are all just pure example of my favorite hobby.
-          
-          <div class="pill-row">
-            <span class="pill">Web Dev</span>
-            <span class="pill">Coding</span>
-            <span class="pill">Entrepreneur</span>
-          </div>
-
-          <a href="resume.pdf" class="card-btn">Download CV</a>
         </div>
+        <div class="tags">
+          <span class="tag">Web Dev</span>
+          <span class="tag">Coding</span>
+          <span class="tag">Entrepreneur</span>
+        </div>
+        <a href="resume.pdf" class="btn">Download CV</a>
       </div>
 
       <div class="card">
         <div class="card-title">Video Editing & 3D</div>
         <div class="card-meta">GFX • VFX • BLENDER</div>
-        <div class="card-body">
+        <div class="card-desc">
           I love and am passionate about 3D and graphical video editing, its helped me earn plenty bucks from freelancing and commissions, i love to keep it as a side business.
-          
-          <div class="pill-row">
-            <span class="pill">After Effects</span>
-            <span class="pill">Cinema 4D</span>
-            <span class="pill">3D</span>
-          </div>
-
-          <a href="https://fiverr.com/naeemshanavas" target="_blank" class="card-btn">View Business</a>
         </div>
+        <div class="tags">
+          <span class="tag">After Effects</span>
+          <span class="tag">Cinema 4D</span>
+          <span class="tag">3D</span>
+        </div>
+        <a href="https://fiverr.com/naeemshanavas" target="_blank" class="btn">View Business</a>
       </div>
+    </div>
+  </section>
+
+  <section class="section" id="projects-section">
+    <div class="section-title"><span class="accent">//</span> GitHub Repositories</div>
+    <p style="color: #6b7280; margin-bottom: 1.5rem;">
+      Live data fetched from <a href="https://github.com/legacyosint" style="color:#38bdf8;">@legacyosint</a>.
+    </p>
+    <div class="grid" id="github-grid">
+      <div style="color: #6b7280;">Loading repositories...</div>
     </div>
   </section>
 
   <section class="section">
-    <div class="section-title"><span>//</span> Contact & Links</div>
-    <div class="section-desc">
-      Available for remote consulting, security assessments, and collaborative research.
-    </div>
-    <div class="grid">
-      <div class="card">
-        <div class="card-title">Engage</div>
-        <div class="card-meta">SIGNAL • E-MAIL • GITHUB</div>
-        <div class="card-body">
-          <div class="link-row">
-            <a href="mailto:naeemshanavas@gmail.com" class="link">naeemshanavas@gmail.com</a>
-            <a href="https://github.com/legacyosint" class="link">GitHub</a>
-            <a href="https://www.linkedin.com/in/naeem-shanavas" class="link">LinkedIn</a>
-          </div>
-          <p style="margin-top:1rem; opacity:0.7; font-size: 0.85rem;">
-            Replace links with your real handles and feel free to add a PGP key or HackerOne / Bugcrowd profile.
-          </p>
-        </div>
+    <div class="section-title"><span class="accent">//</span> Contact</div>
+    <div class="card">
+      <div class="card-title">Engage</div>
+      <div class="card-meta">SIGNAL • E-MAIL • GITHUB</div>
+      <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="mailto:naeemshanavas@gmail.com" class="btn" style="margin-top:0">Email</a>
+        <a href="https://github.com/legacyosint" class="btn" style="margin-top:0">GitHub</a>
+        <a href="https://www.linkedin.com/in/naeem-shanavas" class="btn" style="margin-top:0">LinkedIn</a>
       </div>
     </div>
   </section>
+
 </div>
 
 <script>
-  /* --- 1. HANDLING THE INTRO CLICK --- */
+  /* --- 1. OVERLAY & INIT --- */
   const overlay = document.getElementById('overlay');
   const content = document.getElementById('main-content');
-  const body = document.body;
+  const termInput = document.getElementById('term-input');
 
   overlay.addEventListener('click', () => {
-    // Fade out overlay
     overlay.style.opacity = '0';
-    overlay.style.pointerEvents = 'none';
-
-    // Reveal Content
+    setTimeout(() => overlay.remove(), 800);
+    
     content.style.opacity = '1';
     content.style.filter = 'blur(0px)';
-    body.style.overflow = 'auto'; // Re-enable scrolling
-
-    // Start Typed.js effect ONLY after click
-    startTyping();
+    
+    // Auto-focus terminal
+    setTimeout(() => termInput.focus(), 500);
+    
+    // Fetch GitHub Repos
+    fetchGitHubRepos();
   });
 
-  /* --- 2. TYPED.JS CONFIG --- */
-  function startTyping() {
-      new Typed(".typed", {
-        strings: [
-            "whoami",
-            "cat capabilities.txt",
-            "python3 ai_model.py",
-            "render_blender_scene..."
-        ],
-        typeSpeed: 50,
-        backSpeed: 30,
-        backDelay: 1000,
-        loop: true
+  /* --- 2. FAKE TERMINAL LOGIC --- */
+  const outputDiv = document.getElementById('terminal-output');
+  const terminalBody = document.getElementById('terminal-body');
+
+  const commands = {
+    help: "Available commands: <br> - <span class='command-success'>about</span>: Who am I?<br> - <span class='command-success'>skills</span>: What can I do?<br> - <span class='command-success'>socials</span>: Connect with me<br> - <span class='command-success'>clear</span>: Clear screen",
+    about: "I am Naeem, a Cyber Security specialist and AI Developer. Passionate about OSINT, Red Teaming, and 3D Visuals.",
+    skills: "Programming (Python, JS), Web Dev, OSINT, Threat Hunting, Video Editing (AE, Blender).",
+    socials: "GitHub: legacyosint | LinkedIn: naeem-shanavas | Email: naeemshanavas@gmail.com",
+    whoami: "root@naeem (Admin User)",
+    sudo: "Nice try, but you already have root access here."
+  };
+
+  termInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const input = this.value.trim().toLowerCase();
+      
+      // 1. Add command to history
+      outputDiv.innerHTML += `<div class="input-line"><span class="prompt">root@naeem</span> <span class="path">~ $</span> ${this.value}</div>`;
+      
+      // 2. Process command
+      if (input === 'clear') {
+        outputDiv.innerHTML = '';
+      } else if (commands[input]) {
+        outputDiv.innerHTML += `<div class="output-line">${commands[input]}</div>`;
+      } else if (input !== '') {
+        outputDiv.innerHTML += `<div class="output-line command-error">Command not found: ${input}. Type 'help'.</div>`;
+      }
+      
+      // 3. Reset input and scroll
+      this.value = '';
+      outputDiv.innerHTML += '<br>';
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+  });
+  
+  // Keep focus on input if user clicks terminal
+  document.querySelector('.terminal-window').addEventListener('click', () => {
+    termInput.focus();
+  });
+
+  /* --- 3. GITHUB REPO FETCHER --- */
+  async function fetchGitHubRepos() {
+    const username = 'legacyosint';
+    const grid = document.getElementById('github-grid');
+    
+    try {
+      const res = await fetch(`https://api.github.com/users/${username}/repos?sort=pushed&per_page=6`);
+      if (!res.ok) throw new Error('GitHub API limit or error');
+      const repos = await res.json();
+      
+      grid.innerHTML = ''; // Clear loading text
+
+      repos.forEach(repo => {
+        // Create Card HTML
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-title">${repo.name}</div>
+          <div class="card-meta">${repo.language || 'Code'}</div>
+          <div class="card-desc">${repo.description || 'No description provided.'}</div>
+          <div class="repo-stats">
+            <span class="stat-item">★ ${repo.stargazers_count}</span>
+            <span class="stat-item">⑂ ${repo.forks_count}</span>
+          </div>
+          <a href="${repo.html_url}" target="_blank" class="btn">View Repo</a>
+        `;
+        grid.appendChild(card);
       });
+    } catch (err) {
+      grid.innerHTML = `<div style="color: #ef4444;">Error loading repos: ${err.message}. (API limit might be reached)</div>`;
+    }
   }
 
-  /* --- 3. PARTICLES.JS CONFIG --- */
+  /* --- 4. PARTICLES --- */
   particlesJS("particles-js", {
     particles: {
-      number: { value: 80, density: { enable: true, value_area: 800 } },
-      color: { value: "#22d3ee" }, // Cyan particles
+      number: { value: 60 },
+      color: { value: "#22d3ee" },
       shape: { type: "circle" },
       opacity: { value: 0.5, random: true },
-      size: { value: 3, random: true },
-      line_linked: {
-        enable: true,
-        distance: 150,
-        color: "#22d3ee",
-        opacity: 0.2,
-        width: 1
-      },
-      move: {
-        enable: true,
-        speed: 2,
-        direction: "none",
-        random: false,
-        straight: false,
-        out_mode: "out",
-        bounce: false,
-      }
+      size: { value: 3 },
+      line_linked: { enable: true, distance: 150, color: "#22d3ee", opacity: 0.2 },
+      move: { enable: true, speed: 2 }
     },
     interactivity: {
       detect_on: "canvas",
-      events: {
-        onhover: { enable: true, mode: "repulse" },
-        onclick: { enable: true, mode: "push" },
-        resize: true
-      },
-      modes: {
-        repulse: { distance: 100, duration: 0.4 },
-        push: { particles_nb: 4 }
-      }
-    },
-    retina_detect: true
+      events: { onhover: { enable: true, mode: "grab" } }
+    }
   });
 </script>
 </body>
