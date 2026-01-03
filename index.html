@@ -78,11 +78,10 @@
             position: relative;
         }
 
-        /* The 3D Character Container (@) */
         #wrapper-at {
             display: inline-block;
             transform-style: preserve-3d;
-            color: #d946ef; /* Match brand color */
+            color: #d946ef;
         }
 
         .spin-3d {
@@ -94,7 +93,6 @@
             100% { transform: rotateY(360deg); }
         }
 
-        /* The sliding text reveals */
         .reveal-text {
             display: inline-block;
             overflow: hidden;
@@ -104,12 +102,10 @@
             transition: max-width 1.2s var(--ease-smooth), opacity 0.6s ease;
         }
 
-        /* Colors to match screenshot */
         #text-arth { color: #d946ef; }
         #char-underscore { color: #22d3ee; }
         #text-ral { color: #22d3ee; }
         
-        /* The Initial Underline */
         #initial-underline {
             position: absolute;
             bottom: -8px;
@@ -122,7 +118,6 @@
             transition: opacity 0.4s ease;
         }
 
-        /* Final Fade Out */
         .blur-out {
             animation: blurOut 1s var(--ease-smooth) forwards;
             pointer-events: none;
@@ -230,7 +225,7 @@
 
                 <div id="repo-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 font-sans">
                     <div class="glass p-6 rounded-2xl col-span-full text-center">
-                        <p class="text-slate-400 animate-pulse">Fetching latest repositories...</p>
+                        <p class="text-slate-400 animate-pulse">Fetching latest repositories from API...</p>
                     </div>
                 </div>
             </div>
@@ -243,7 +238,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // --- 1. SMOOTH ANIMATION SEQUENCE ---
+            // --- 1. ANIMATION SEQUENCE ---
             const wrapperAt = document.getElementById('wrapper-at');
             const initialUnderline = document.getElementById('initial-underline');
             const textArth = document.getElementById('text-arth');
@@ -252,60 +247,47 @@
             const splashScreen = document.getElementById('splash-screen');
             const mainContent = document.getElementById('main-content');
 
-            // T+0.5s: Show Underline under 'e'
-            setTimeout(() => { 
-                initialUnderline.style.opacity = '1'; 
-            }, 500);
+            // 0.5s: Underline appears
+            setTimeout(() => { initialUnderline.style.opacity = '1'; }, 500);
 
-            // T+1.5s: Spin 'e' in 3D
-            setTimeout(() => {
-                wrapperAt.classList.add('spin-3d');
-            }, 1500);
+            // 1.5s: Spin 'e'
+            setTimeout(() => { wrapperAt.classList.add('spin-3d'); }, 1500);
 
-            // T+1.9s: Swap 'e' to '@' mid-spin
-            setTimeout(() => {
-                wrapperAt.textContent = "@";
-            }, 1900);
+            // 1.9s: Swap 'e' to '@'
+            setTimeout(() => { wrapperAt.textContent = "@"; }, 1900);
 
-            // T+3.0s: Slide out text and hide initial underline
+            // 3.0s: Slide out text
             setTimeout(() => {
-                // Fade out initial underline
                 initialUnderline.style.opacity = '0';
-
-                // Reveal all other parts smoothly
                 textArth.style.maxWidth = "3.5em"; 
                 textArth.style.opacity = "1";
-                
                 charUnderscore.style.maxWidth = "1em";
                 charUnderscore.style.opacity = "1";
-
                 textRal.style.maxWidth = "2.5em"; 
                 textRal.style.opacity = "1";
             }, 3000);
 
-            // T+5.0s: Luxurious Blur and Scale Out
+            // 5.0s: Blur Out
             setTimeout(() => {
                 splashScreen.classList.add('blur-out');
                 mainContent.classList.remove('hidden-content');
                 mainContent.classList.add('visible-content');
             }, 5000);
 
-            // T+6.2s: Clean up DOM
-            setTimeout(() => {
-                splashScreen.style.display = 'none';
-            }, 6200);
+            // 6.2s: Remove splash
+            setTimeout(() => { splashScreen.style.display = 'none'; }, 6200);
 
 
-            // --- 2. LIVE GITHUB FETCH LOGIC ---
+            // --- 2. DYNAMIC GITHUB FETCH LOGIC (NO HARDCODED DATA) ---
             const container = document.getElementById('repo-grid');
             const username = 'artheral';
             
             async function loadRepos() {
                 try {
-                    // 1. Try fetching as a USER
+                    // Try fetching as USER
                     let response = await fetch(`https://api.github.com/users/${username}/repos?sort=pushed&per_page=6`);
                     
-                    // 2. If User not found (404), try fetching as an ORGANIZATION
+                    // If 404, try fetching as ORG
                     if (response.status === 404) {
                         response = await fetch(`https://api.github.com/orgs/${username}/repos?sort=pushed&per_page=6`);
                     }
@@ -313,7 +295,7 @@
                     if (!response.ok) throw new Error("API Error");
 
                     const repos = await response.json();
-                    container.innerHTML = ''; 
+                    container.innerHTML = ''; // Clear loading message
 
                     if (repos.length === 0) {
                         container.innerHTML = '<p class="text-slate-500 col-span-full text-center">No public repositories found.</p>';
@@ -339,7 +321,7 @@
                         container.innerHTML += card;
                     });
                 } catch (error) {
-                    // FALLBACK if Rate Limit Hit
+                    // Only show this if the fetch actually fails
                     container.innerHTML = `
                         <div class="col-span-full glass p-8 rounded-2xl text-center">
                             <h3 class="text-xl font-bold text-white mb-2">GitHub Unavailable</h3>
