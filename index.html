@@ -6,6 +6,7 @@
     <title>Naeem Shanavas | Portfolio</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -165,7 +166,7 @@
 
         <section class="pt-20 pb-32 px-6 text-center relative z-10">
             <div class="inline-block mb-6 px-4 py-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 text-xs font-bold tracking-widest text-brand-400 font-sans">
-                CYBER SECURITY & AI DEVELOPER
+                WEB DEVELOPER & 3D EDITING FREELANCER
             </div>
             <h1 class="text-5xl md:text-7xl font-display font-bold leading-tight mb-6 text-white">
                 Building the Future of <br />
@@ -174,9 +175,16 @@
             <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10 font-sans">
                 I am Naeem Shanavas. Highly experienced in Web development, Back-end and Front-end creation, 3D graphic & crazy interested in freelancing with creativity. I love to connect with people so hit me up on LinkedIn and let's collaborate!
             </p>
-            <div class="flex justify-center gap-4 font-sans">
+            
+            <div class="flex justify-center gap-4 font-sans mb-12">
                 <a href="#projects" class="px-8 py-3 rounded-full bg-white text-black font-bold hover:bg-gray-200 transition">View Projects</a>
                 <a href="NAEEM SHANAVAS CV.pdf" class="px-8 py-3 rounded-full glass text-white font-medium hover:bg-white/10 transition">View CV</a>
+            </div>
+
+            <div class="flex justify-center">
+                <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="large" data-theme="dark" data-type="HORIZONTAL" data-vanity="naeemshanavas" data-version="v1">
+                    <a class="badge-base__link LI-simple-link" href="https://in.linkedin.com/in/naeemshanavas?trk=profile-badge">Naeem Shanavas</a>
+                </div>
             </div>
         </section>
 
@@ -223,7 +231,6 @@
 
         <section id="projects" class="py-20 px-6">
             <div class="max-w-5xl mx-auto">
-                <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="large" data-theme="light" data-type="HORIZONTAL" data-vanity="naeemshanavas" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://in.linkedin.com/in/naeemshanavas?trk=profile-badge">Naeem Shanavas</a></div>
                 <div class="mb-10 border-b border-white/10 pb-4">
                     <h2 class="text-2xl font-display font-bold text-white">// GitHub Repositories</h2>
                     <p class="text-slate-500 text-sm mt-1 font-sans">Live data from @artheral</p>
@@ -253,38 +260,51 @@
             const splashScreen = document.getElementById('splash-screen');
             const mainContent = document.getElementById('main-content');
 
-            // 0.5s: Underline appears
-            setTimeout(() => { initialUnderline.style.opacity = '1'; }, 500);
+            // T+0.5s: Show Underline under 'e'
+            setTimeout(() => { 
+                initialUnderline.style.opacity = '1'; 
+            }, 500);
 
-            // 1.5s: Spin 'e'
-            setTimeout(() => { wrapperAt.classList.add('spin-3d'); }, 1500);
-
-            // 1.9s: Swap 'e' to '@'
-            setTimeout(() => { wrapperAt.textContent = "@"; }, 1900);
-
-            // 3.0s: Slide out text
+            // T+1.5s: Spin 'e' in 3D
             setTimeout(() => {
+                wrapperAt.classList.add('spin-3d');
+            }, 1500);
+
+            // T+1.9s: Swap 'e' to '@' mid-spin
+            setTimeout(() => {
+                wrapperAt.textContent = "@";
+            }, 1900);
+
+            // T+3.0s: Slide out text and hide initial underline
+            setTimeout(() => {
+                // Fade out initial underline
                 initialUnderline.style.opacity = '0';
+
+                // Reveal all other parts smoothly
                 textArth.style.maxWidth = "3.5em"; 
                 textArth.style.opacity = "1";
+                
                 charUnderscore.style.maxWidth = "1em";
                 charUnderscore.style.opacity = "1";
+
                 textRal.style.maxWidth = "2.5em"; 
                 textRal.style.opacity = "1";
             }, 3000);
 
-            // 5.0s: Blur Out
+            // T+5.0s: Luxurious Blur and Scale Out
             setTimeout(() => {
                 splashScreen.classList.add('blur-out');
                 mainContent.classList.remove('hidden-content');
                 mainContent.classList.add('visible-content');
             }, 5000);
 
-            // 6.2s: Remove splash
-            setTimeout(() => { splashScreen.style.display = 'none'; }, 6200);
+            // T+6.2s: Clean up DOM
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+            }, 6200);
 
 
-            // --- 2. DYNAMIC GITHUB FETCH LOGIC (NO HARDCODED DATA) ---
+            // --- 2. LIVE GITHUB FETCH LOGIC ---
             const container = document.getElementById('repo-grid');
             const username = 'artheral';
             
@@ -327,7 +347,7 @@
                         container.innerHTML += card;
                     });
                 } catch (error) {
-                    // Only show this if the fetch actually fails
+                    // FALLBACK if Rate Limit Hit
                     container.innerHTML = `
                         <div class="col-span-full glass p-8 rounded-2xl text-center">
                             <h3 class="text-xl font-bold text-white mb-2">GitHub Unavailable</h3>
